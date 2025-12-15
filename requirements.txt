@@ -1,0 +1,5 @@
+pyelw==0.9.5
+numpy>=2.3.3
+pandas>=2.3.3
+scipy>=1.13.1
+matplotlib>=3.7.0

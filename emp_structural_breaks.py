@@ -14,7 +14,7 @@ import matplotlib.pyplot as plt
 from datetime import datetime
 from dateutil.relativedelta import relativedelta
 
-from pyelw import LW, ELW, TwoStepELW, LWBootstrapM
+from pyelw import LW, ELW, TwoStepELW, LWBootstrapM, LWLFC
 from common import ESTIMATOR_COLORS
 from bai_perron import find_breakpoints, select_breaks_bic
 from qu_test import qu_test
@@ -43,7 +43,7 @@ def index_to_date(index):
 
 
 def estimate_all_methods(series, m):
-    """Estimate d using all five Local Whittle methods."""
+    """Estimate d using all six Local Whittle methods."""
     results = {}
 
     # LW estimator (no taper)
@@ -70,6 +70,11 @@ def estimate_all_methods(series, m):
     elw2 = TwoStepELW()
     elw2_result = elw2.estimate(series, m=m, bounds=BOUNDS, trend_order=0, verbose=False)
     results['2ELW'] = {'d': elw2_result['d_hat'], 'se': elw2_result['se']}
+
+    # LWLFC (Hou-Perron)
+    lwlfc = LWLFC()
+    lwlfc.fit(series, m=m)
+    results['LWLFC'] = {'d': lwlfc.d_hat_, 'se': lwlfc.se_}
 
     return results
 
@@ -177,7 +182,7 @@ def main():
     print()
     print(f"{'Method':<8} {'d_hat':>8} {'SE':>8}")
     print("--------------------------")
-    for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+    for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
         r = full_results[method]
         print(f"{method:<8} {r['d']:>8.3f} {r['se']:>8.3f}")
     print()
@@ -211,7 +216,7 @@ def main():
         print()
         print(f"{'Method':<8} {'d_hat':>8} {'SE':>8}")
         print("--------------------------")
-        for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+        for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
             r = results[method]
             print(f"{method:<8} {r['d']:>8.3f} {r['se']:>8.3f}")
         print()
@@ -243,7 +248,7 @@ def main():
         print()
         print(f"{'Method':<8} {'d_hat':>8} {'SE':>8}")
         print("--------------------------")
-        for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+        for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
             r = results[method]
             print(f"{method:<8} {r['d']:>8.3f} {r['se']:>8.3f}")
         print()
@@ -374,33 +379,33 @@ def generate_latex_table(n, m, alpha, full_results, subsample_results_alpha,
 \begin{threeparttable}
 \caption{Inflation in France: Subsample Analysis with Detected Structural Breaks}
 \label{tab:french_subsample}
-\begin{tabular}{lrrccccc}
+\begin{tabular}{lrrcccccc}
 \toprule
-Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW \\
+Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW & LWLFC \\
 \midrule
 """
 
     # Full sample row
     latex += f"Full sample (1957--1997) & {n} & {m}"
-    for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+    for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
         latex += f" & ${full_results[method]['d']:.3f}$"
     latex += r" \\" + "\n"
 
     # Standard errors for full sample
     latex += f" & & "
-    for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+    for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
         latex += f" & $({full_results[method]['se']:.3f})$"
     latex += r" \\" + "\n"
 
     # Panel A header
     latex += r"\midrule" + "\n"
-    latex += r"\multicolumn{8}{c}{\textit{Panel A: Power rule bandwidth ($m = n^{" + f"{alpha:.2f}" + r"}$)}} \\" + "\n"
+    latex += r"\multicolumn{9}{c}{\textit{Panel A: Power rule bandwidth ($m = n^{" + f"{alpha:.2f}" + r"}$)}} \\" + "\n"
     latex += r"\midrule" + "\n"
 
     # Panel A: Subsample rows with same alpha
     for res in subsample_results_alpha:
         latex += f"{res['regime']} & {res['n']} & {res['m']}"
-        for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+        for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
             d_val = res[method]['d']
             if d_val < 0:
                 latex += f" & $-{abs(d_val):.3f}$"
@@ -410,19 +415,19 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW \\
 
         # Standard errors
         latex += f" & & "
-        for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+        for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
             latex += f" & $({res[method]['se']:.3f})$"
         latex += r" \\" + "\n"
 
     # Panel B header
     latex += r"\midrule" + "\n"
-    latex += r"\multicolumn{8}{c}{\textit{Panel B: Bootstrap-MSE-optimal bandwidth $m^*$}} \\" + "\n"
+    latex += r"\multicolumn{9}{c}{\textit{Panel B: Bootstrap-MSE-optimal bandwidth $m^*$}} \\" + "\n"
     latex += r"\midrule" + "\n"
 
     # Panel B: Subsample rows with bootstrap-optimal bandwidth
     for res in subsample_results_bootstrap:
         latex += f"{res['regime']} & {res['n']} & {res['m']}"
-        for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+        for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
             d_val = res[method]['d']
             if d_val < 0:
                 latex += f" & $-{abs(d_val):.3f}$"
@@ -432,7 +437,7 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW \\
 
         # Standard errors
         latex += f" & & "
-        for method in ['LW', 'V', 'HC', 'ELW', '2ELW']:
+        for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
             latex += f" & $({res[method]['se']:.3f})$"
         latex += r" \\" + "\n"
 

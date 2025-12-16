@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from multiprocessing import Pool
 
-from pyelw import LW, ELW, TwoStepELW
+from pyelw import LW, ELW, TwoStepELW, LWLFC
 from common import format_mse_latex, format_mse_ratio_latex, MSE_THRESHOLD, MSE_RATIO_THRESHOLD
 from pyelw.simulate import arfima
 
@@ -25,7 +25,7 @@ m = int(n_obs**alpha)
 bounds = (-4.0, 4.0)
 seed_base = 42
 
-estimator_names = ['LW', 'V', 'HC', 'ELW', '2ELW']
+estimator_names = ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']
 
 
 def run_single_rep(args):
@@ -94,6 +94,14 @@ def run_single_rep(args):
         results['2ELW'] = res['d_hat']
     except Exception:
         results['2ELW'] = np.nan
+
+    # LWLFC (Hou-Perron) - robust to low frequency contamination including trends
+    lwlfc = LWLFC()
+    try:
+        lwlfc.fit(x, m=m)
+        results['LWLFC'] = lwlfc.d_hat_
+    except Exception:
+        results['LWLFC'] = np.nan
 
     return results
 
@@ -194,10 +202,10 @@ def main():
         mse_pivot = panel_df.pivot_table(values='mse', index='d', columns=['trend', 'estimator']).round(4)
 
         # Table header
-        print(f"|      | trend={trend_clean}                             | trend={trend_contam}                            |")
-        print("|------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|")
-        print("|  d   |  LW   |   V   |  HC   |  ELW  | 2ELW  |  LW   |   V   |  HC   |  ELW  | 2ELW  |")
-        print("|------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|")
+        print(f"|      | trend={trend_clean}                                     | trend={trend_contam}                                    |")
+        print("|------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|")
+        print("|  d   |  LW   |   V   |  HC   |  ELW  | 2ELW  | LWLFC |  LW   |   V   |  HC   |  ELW  | 2ELW  | LWLFC |")
+        print("|------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|-------|")
 
         for d_val in d_list:
             line = f"| {d_val:4.1f} |"
@@ -232,8 +240,8 @@ def main():
         contam_results = panel_df[panel_df['trend'] == trend_contam].set_index(['d', 'estimator'])['mse']
 
         # Manual markdown table for ratios
-        print("|  d   |    LW   |    V    |    HC   |   ELW   |   2ELW  |")
-        print("|------|---------|---------|---------|---------|---------|")
+        print("|  d   |    LW   |    V    |    HC   |   ELW   |   2ELW  |  LWLFC  |")
+        print("|------|---------|---------|---------|---------|---------|---------|")
         for d_val in d_list:
             line = f"| {d_val:4.1f} |"
             for est in estimator_names:
@@ -251,11 +259,11 @@ def main():
 \\caption{{Robustness to Time Trend}}
 \\label{{tab:mc_time_trend}}
 \\footnotesize
-\\begin{{tabular}}{{c|rrrrr|rrrrr}}
+\\begin{{tabular}}{{c|rrrrrr|rrrrrr}}
 \\toprule
-& \\multicolumn{{5}}{{c|}}{{Baseline MSE ($\\beta = {trend_clean}$)}} & \\multicolumn{{5}}{{c}}{{MSE Ratio ($\\beta = {trend_contam}$ / $\\beta = {trend_clean}$)}} \\\\
-\\cmidrule(lr){{2-6}} \\cmidrule(lr){{7-11}}
-$d$ & LW & V & HC & ELW & 2ELW & LW & V & HC & ELW & 2ELW \\\\
+& \\multicolumn{{6}}{{c|}}{{Baseline MSE ($\\beta = {trend_clean}$)}} & \\multicolumn{{6}}{{c}}{{MSE Ratio ($\\beta = {trend_contam}$ / $\\beta = {trend_clean}$)}} \\\\
+\\cmidrule(lr){{2-7}} \\cmidrule(lr){{8-13}}
+$d$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LWLFC \\\\
 """
 
     for panel_idx, trend_correction in enumerate(trend_correction_methods):
@@ -271,7 +279,7 @@ $d$ & LW & V & HC & ELW & 2ELW & LW & V & HC & ELW & 2ELW \\\\
             latex_table += "\\midrule\n"
 
         # Add panel label row
-        latex_table += f"\\multicolumn{{11}}{{c}}{{\\textit{{{panel_description}}}}} \\\\\n\\midrule\n"
+        latex_table += f"\\multicolumn{{13}}{{c}}{{\\textit{{{panel_description}}}}} \\\\\n\\midrule\n"
 
         # Filter results for this panel
         panel_df = results_df[results_df['trend_correction'] == trend_correction]
@@ -313,7 +321,7 @@ $d$ & LW & V & HC & ELW & 2ELW & LW & V & HC & ELW & 2ELW \\\\
 \\footnotesize
 \\item Notes: MSE results for {arfima_spec}, n={n_obs}, m={m}, {mc_reps:,} replications.
     Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$ or $\\text{{MSE Ratio}} > {MSE_RATIO_THRESHOLD:.1f}$.
-\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW with linear detrending and adaptive mean estimation applied to original series.
+\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW with linear detrending and adaptive mean estimation applied to original series, LWLFC = Local Whittle with Low Frequency Contamination.
 \\end{{tablenotes}}
 \\end{{threeparttable}}
 \\end{{table}}

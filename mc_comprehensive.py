@@ -9,7 +9,7 @@ import numpy as np
 import pandas as pd
 from multiprocessing import Pool
 
-from pyelw import LW, ELW, TwoStepELW
+from pyelw import LW, ELW, TwoStepELW, LWLFC
 from pyelw.simulate import arfima
 from common import format_mse_latex, MSE_THRESHOLD
 
@@ -23,7 +23,7 @@ m = int(n_obs**alpha)
 bounds = (-4.0, 4.0)
 seed_base = 42
 
-estimator_names = ['LW', 'V', 'HC', 'ELW', '2ELW']
+estimator_names = ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']
 
 
 def run_single_rep(args):
@@ -74,6 +74,14 @@ def run_single_rep(args):
         results['2ELW'] = res['d_hat']
     except Exception:
         results['2ELW'] = np.nan
+
+    # LWLFC (Hou-Perron)
+    lwlfc = LWLFC()
+    try:
+        lwlfc.fit(x, m=m)
+        results['LWLFC'] = lwlfc.d_hat_
+    except Exception:
+        results['LWLFC'] = np.nan
 
     return results
 
@@ -214,11 +222,11 @@ def main():
 \\caption{{Comprehensive Estimator Comparison}}
 \\label{{tab:mc_comprehensive}}
 \\footnotesize
-\\begin{{tabular}}{{cc|ccccc|ccccc}}
+\\begin{{tabular}}{{cc|rrrrrr|rrrrrr}}
 \\toprule
-&  & \\multicolumn{{5}}{{c|}}{{Bias}} & \\multicolumn{{5}}{{c}}{{MSE}} \\\\
-\\cmidrule(lr){{3-7}} \\cmidrule(lr){{8-12}}
-$d$ & $\\rho$ & LW & V & HC & ELW & 2ELW & LW & V & HC & ELW & 2ELW \\\\
+&  & \\multicolumn{{6}}{{c|}}{{Bias}} & \\multicolumn{{6}}{{c}}{{MSE}} \\\\
+\\cmidrule(lr){{3-8}} \\cmidrule(lr){{9-14}}
+$d$ & $\\rho$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LWLFC \\\\
 \\midrule
 """
 
@@ -252,7 +260,7 @@ $d$ & $\\rho$ & LW & V & HC & ELW & 2ELW & LW & V & HC & ELW & 2ELW \\\\
 \\footnotesize
 \\item Notes: Monte Carlo results for $\\ARFIMA(1,d,0)$ processes with $n={n_obs}$, $m={m}$, {mc_reps:,} replications.
     Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$.
-\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW.
+\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW, LWLFC = Local Whittle with Low Frequency Contamination.
 \\end{{tablenotes}}
 \\end{{threeparttable}}
 \\end{{table}}

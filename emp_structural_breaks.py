@@ -236,7 +236,9 @@ def main():
         bootstrap_lw = LWBootstrapM(bounds=BOUNDS, B=200, verbose=False)
         bootstrap_lw.fit(segment)
         m_opt = bootstrap_lw.optimal_m_
+        k_n = bootstrap_lw.k_n_
         print(f"  Optimal m = {m_opt}")
+        print(f"  k_n = {k_n}")
 
         results = estimate_all_methods(segment, m_opt)
         results['regime'] = regime['name']

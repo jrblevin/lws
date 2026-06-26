@@ -13,13 +13,12 @@ from pyelw import LW, ELW, TwoStepELW, LWLFC
 from pyelw.simulate import arfima
 from common import format_mse_latex, MSE_THRESHOLD
 
-# Settings from updated outline
-n_obs = 500
+# Settings
+n_list = [500, 250, 1000]
 d_list = [-2.2, -1.8, -1.2, -0.6, -0.3, 0.0, 0.3, 0.6, 1.2, 1.8, 2.2]
 phi_list = [0.0, 0.5, 0.8]
 mc_reps = 10000
 alpha = 0.65
-m = int(n_obs**alpha)
 bounds = (-4.0, 4.0)
 seed_base = 42
 
@@ -28,7 +27,7 @@ estimator_names = ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']
 
 def run_single_rep(args):
     """Run a single Monte Carlo replication for all estimators."""
-    d_true, phi, rep_id, seed = args
+    n_obs, m, d_true, phi, rep_id, seed = args
 
     # Generate ARFIMA(1,d,0) data - match Shimotsu-Phillips exactly
     x = arfima(n_obs, d_true, phi=phi, sigma=1.0, seed=seed, burnin=0)
@@ -86,16 +85,13 @@ def run_single_rep(args):
     return results
 
 
-def main():
-    """Main function to run the Monte Carlo simulation."""
-    print("Comprehensive Estimator Comparison")
-    print("==================================")
+def run_comparison(n_obs):
+    """Run the comprehensive comparison at sample size n_obs and write its table."""
+    m = int(n_obs**alpha)
+
     print(f"Sample size: n = {n_obs}")
     print(f"Number of frequencies: m = n^{alpha} = {m}")
     print(f"Replications: {mc_reps}")
-    print(f"d values: {d_list}")
-    print(f"rho values: {phi_list}")
-    print(f"Estimators: {estimator_names}")
     print()
 
     # Prepare all simulation tasks
@@ -107,7 +103,7 @@ def main():
                         phi_list.index(phi) * len(d_list) * mc_reps +
                         d_list.index(d_true) * mc_reps +
                         rep)
-                tasks.append((d_true, phi, rep, seed))
+                tasks.append((n_obs, m, d_true, phi, rep, seed))
 
     print("Running Monte Carlo simulations...")
 
@@ -215,12 +211,23 @@ def main():
         print(data_line)
     print()
 
+    # The baseline (n = 500) keeps the original main-text caption, label, and
+    # filename. The other sample sizes write the Appendix A tables.
+    if n_obs == 500:
+        caption = "Comprehensive Estimator Comparison"
+        label = "tab:mc_comprehensive"
+        path = "tables/mc_comprehensive.tex"
+    else:
+        caption = f"Estimator Comparison at $n={n_obs}$"
+        label = f"tab:mc_comp_n{n_obs}"
+        path = f"tables/mc_comprehensive_n{n_obs}.tex"
+
     # Generate LaTeX table
     latex_table = f"""\\begin{{table}}[htbp]
 \\centering
 \\begin{{threeparttable}}
-\\caption{{Comprehensive Estimator Comparison}}
-\\label{{tab:mc_comprehensive}}
+\\caption{{{caption}}}
+\\label{{{label}}}
 \\footnotesize
 \\begin{{tabular}}{{cc|rrrrrr|rrrrrr}}
 \\toprule
@@ -267,10 +274,25 @@ $d$ & $\\rho$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LW
 """
 
     # Save LaTeX table
-    with open('tables/mc_comprehensive.tex', 'w') as f:
+    with open(path, 'w') as f:
         f.write(latex_table)
 
-    print("LaTeX table saved to: tables/mc_comprehensive.tex")
+    print(f"LaTeX table saved to: {path}")
+
+
+def main():
+    """Run the comprehensive comparison at each sample size in n_list."""
+    print("Comprehensive Estimator Comparison")
+    print("==================================")
+    print(f"d values: {d_list}")
+    print(f"rho values: {phi_list}")
+    print(f"Sample sizes: {n_list}")
+    print(f"Estimators: {estimator_names}")
+    print()
+
+    for n_obs in n_list:
+        run_comparison(n_obs)
+        print()
 
 
 if __name__ == '__main__':

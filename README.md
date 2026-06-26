@@ -31,7 +31,7 @@ paper:
 - `mc_lw_hc.py` - Hurvich and Chen (2000) tapered LW estimator
 - `mc_elw.py` - Exact Local Whittle estimator
 - `mc_2elw.py` - Two-step ELW estimator
-- `mc_comprehensive.py` - Comprehensive comparison
+- `mc_comprehensive.py` - Comprehensive comparison (n=500, 250, 1000)
 - `mc_unknown_mean.py` - Robustness to unknown mean
 - `mc_time_trend.py` - Robustness to time trend
 - `mc_distributions.py` - Sampling distributions figure

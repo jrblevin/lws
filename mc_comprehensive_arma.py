@@ -191,7 +191,7 @@ def main():
 \\begin{threeparttable}
 \\caption{Estimator Comparison under ARMA(1,1) Short-Run Dynamics}
 \\label{tab:mc_comp_arma11}
-\\footnotesize
+\\scriptsize
 \\begin{tabular}{ccc|rrrrrr|rrrrrr}
 \\toprule
 &  &  & \\multicolumn{6}{c|}{Bias} & \\multicolumn{6}{c}{MSE} \\\\

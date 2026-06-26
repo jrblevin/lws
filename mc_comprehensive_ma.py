@@ -225,7 +225,7 @@ def main():
 \\begin{threeparttable}
 \\caption{Estimator Comparison under MA(1) Short-Run Dynamics}
 \\label{tab:mc_comp_ma1}
-\\footnotesize
+\\scriptsize
 \\begin{tabular}{cc|rrrrrr|rrrrrr}
 \\toprule
 &  & \\multicolumn{6}{c|}{Bias} & \\multicolumn{6}{c}{MSE} \\\\

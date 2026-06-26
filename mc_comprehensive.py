@@ -228,7 +228,7 @@ def run_comparison(n_obs):
 \\begin{{threeparttable}}
 \\caption{{{caption}}}
 \\label{{{label}}}
-\\footnotesize
+\\scriptsize
 \\begin{{tabular}}{{cc|rrrrrr|rrrrrr}}
 \\toprule
 &  & \\multicolumn{{6}}{{c|}}{{Bias}} & \\multicolumn{{6}}{{c}}{{MSE}} \\\\

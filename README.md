@@ -2,7 +2,7 @@
 
 This directory contains replication code for the following paper:
 
-Blevins, J.R. (2025).
+Blevins, J.R. (2026).
 [Semiparametric Estimation of Fractional Integration: An Evaluation of Local Whittle Methods](https://jblevins.org/research/lws).
 Working Paper, The Ohio State University.
 
@@ -35,6 +35,8 @@ paper:
 - `mc_unknown_mean.py` - Robustness to unknown mean
 - `mc_time_trend.py` - Robustness to time trend
 - `mc_distributions.py` - Sampling distributions figure
+- `mc_comprehensive_ma.py` - Monte Carlo with MA(1) short-run dynamics (Appendix)
+- `mc_comprehensive_arma.py` - Monte Carlo with ARMA(1,1) short-run dynamics (Appendix)
 
 **Empirical Analyses:**
 - `emp_hurvich_chen.py` - Hurvich and Chen (2000) datasets

@@ -30,62 +30,72 @@ echo ""
 
 # Monte Carlo Tables and Figures
 
-echo "[1/14] Running Table 1: mc_lw.py (LW Estimator)"
+echo "[1/16] Running Table 1: mc_lw.py (LW Estimator)"
 python3 mc_lw.py 2>&1 | tee logs/mc_lw.log
 echo ""
 
-echo "[2/14] Running Table 2: mc_lw_v.py (Velasco Tapered LW Estimator)"
+echo "[2/16] Running Table 2: mc_lw_v.py (Velasco Tapered LW Estimator)"
 python3 mc_lw_v.py 2>&1 | tee logs/mc_lw_v.log
 echo ""
 
-echo "[3/14] Running Table 3: mc_lw_v_all.py (Comparison of Velasco Tapers)"
+echo "[3/16] Running Table 3: mc_lw_v_all.py (Comparison of Velasco Tapers)"
 python3 mc_lw_v_all.py 2>&1 | tee logs/mc_lw_v_all.log
 echo ""
 
-echo "[4/14] Running Table 4: mc_lw_hc.py (HC Tapered LW Estimator)"
+echo "[4/16] Running Table 4: mc_lw_hc.py (HC Tapered LW Estimator)"
 python3 mc_lw_hc.py 2>&1 | tee logs/mc_lw_hc.log
 echo ""
 
-echo "[5/14] Running Table 5: mc_elw.py (ELW Estimator)"
+echo "[5/16] Running Table 5: mc_elw.py (ELW Estimator)"
 python3 mc_elw.py 2>&1 | tee logs/mc_elw.log
 echo ""
 
-echo "[6/14] Running Table 6: mc_2elw.py (2ELW Estimator)"
+echo "[6/16] Running Table 6: mc_2elw.py (2ELW Estimator)"
 python3 mc_2elw.py 2>&1 | tee logs/mc_2elw.log
 echo ""
 
-echo "[7/14] Running Table 7: mc_comprehensive.py (Comprehensive Comparison)"
+echo "[7/16] Running Table 7: mc_comprehensive.py (Comprehensive Comparison)"
 python3 mc_comprehensive.py 2>&1 | tee logs/mc_comprehensive.log
 echo ""
 
-echo "[8/14] Running Table 8: mc_unknown_mean.py (Robustness to Unknown Mean)"
+echo "[8/16] Running Table 8: mc_unknown_mean.py (Robustness to Unknown Mean)"
 python3 mc_unknown_mean.py 2>&1 | tee logs/mc_unknown_mean.log
 echo ""
 
-echo "[9/14] Running Table 9: mc_time_trend.py (Robustness to Time Trend)"
+echo "[9/16] Running Table 9: mc_time_trend.py (Robustness to Time Trend)"
 python3 mc_time_trend.py 2>&1 | tee logs/mc_time_trend.log
 echo ""
 
-echo "[10/14] Running Figure 1: mc_distributions.py (Sampling Distributions)"
+echo "[10/16] Running Figure 1: mc_distributions.py (Sampling Distributions)"
 python3 mc_distributions.py 2>&1 | tee logs/mc_distributions.log
 echo ""
 
 # Empirical Tables and Figures
 
-echo "[11/14] Running Table 10: emp_hurvich_chen.py (Hurvich and Chen Datasets)"
+echo "[11/16] Running Table 10: emp_hurvich_chen.py (Hurvich and Chen Datasets)"
 python3 emp_hurvich_chen.py 2>&1 | tee logs/emp_hurvich_chen.log
 echo ""
 
-echo "[12/14] Running Table 11 and Figures 2 and 3: emp_bandwidth_selection.py (S&P 500)"
+echo "[12/16] Running Table 11 and Figures 2 and 3: emp_bandwidth_selection.py (S&P 500)"
 python3 emp_bandwidth_selection.py 2>&1 | tee logs/emp_bandwidth_selection.log
 echo ""
 
-echo "[13/14] Running Table 12 and Figure 4: emp_structural_breaks.py (France CPI)"
+echo "[13/16] Running Table 12 and Figure 4: emp_structural_breaks.py (France CPI)"
 python3 emp_structural_breaks.py 2>&1 | tee logs/emp_structural_breaks.log
 echo ""
 
-echo "[14/14] Running Figure 2: emp_objective.py (Objective Functions)"
+echo "[14/16] Running Figure 2: emp_objective.py (Objective Functions)"
 python3 emp_objective.py 2>&1 | tee logs/emp_objective.log
+echo ""
+
+# Appendix: Robustness Checks
+
+echo "[15/16] Running Appendix Table: mc_comprehensive_ma.py (MA(1) Short-Run Dynamics)"
+python3 mc_comprehensive_ma.py 2>&1 | tee logs/mc_comprehensive_ma.log
+echo ""
+
+echo "[16/16] Running Appendix Table: mc_comprehensive_arma.py (ARMA(1,1) Short-Run Dynamics)"
+python3 mc_comprehensive_arma.py 2>&1 | tee logs/mc_comprehensive_arma.log
 echo ""
 
 echo "Replication Complete!"
@@ -112,6 +122,10 @@ echo "  - emp_objective.pdf"
 echo "  - emp_bandwidth_selection.pdf"
 echo "  - emp_bandwidth_mse.pdf"
 echo "  - emp_structural_breaks.pdf"
+echo ""
+echo "Appendix Tables (tables/):"
+echo "  - mc_comprehensive_ma1.tex"
+echo "  - mc_comprehensive_arma1.tex"
 echo ""
 echo "Logs saved to: logs/"
 echo ""

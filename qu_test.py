@@ -56,7 +56,8 @@ def qu_test(data, m=None, epsilon=0.05):
     # Default bandwidth: m = round(n^0.7)
     if m is None:
         m = round(n**0.7)
-    m = min(m, n - 1)
+    # Cap at Nyquist frequency
+    m = min(m, n // 2)
 
     # Fourier frequencies
     freq = np.arange(1, n + 1) * (2 * np.pi / n)
@@ -81,7 +82,7 @@ def qu_test(data, m=None, epsilon=0.05):
     stat = np.cumsum((comp1 - 1) * comp2) / np.sqrt(np.sum(comp2**2))
 
     # Trimming
-    trm = round(epsilon * m)
+    trm = int(np.floor(epsilon * m))
     trm = max(1, trm)  # Ensure at least 1
 
     # W statistic

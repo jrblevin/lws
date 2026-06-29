@@ -20,7 +20,7 @@ from bai_perron import find_breakpoints, select_breaks_bic
 from qu_test import qu_test
 
 # Configuration
-DATA_FILE = "data/cpi_fr.dat"
+DATA_FILE = "data/cpi_fr_ext.dat"
 OUTPUT_FIGURE = "figures/emp_structural_breaks.pdf"
 OUTPUT_TABLE = "tables/emp_structural_breaks.tex"
 
@@ -32,8 +32,8 @@ M_FULL = 40  # Bandwidth for full sample from Hurvich and Chen (2000)
 MAX_BREAKS = 7  # Maximum number of breaks to consider
 MIN_SEGMENT_SIZE = 24  # Minimum segment size (2 years of monthly data)
 
-# Start date of series (January 1957)
-START_DATE = datetime(1957, 1, 1)
+# Start date of series (January 1955)
+START_DATE = datetime(1955, 1, 1)
 
 
 def index_to_date(index):
@@ -146,7 +146,7 @@ def main():
     # Define regimes (breakpoints now contains first obs of new regime)
     regimes = [
         {'name': 'Pre-oil shocks', 'start': 0, 'end': breakpoints[0],
-         'period': f"1957-01 to {index_to_date(breakpoints[0]-1)}"},
+         'period': f"{index_to_date(0)} to {index_to_date(breakpoints[0]-1)}"},
         {'name': 'Oil shocks', 'start': breakpoints[0], 'end': breakpoints[1],
          'period': f"{index_to_date(breakpoints[0])} to {index_to_date(breakpoints[1]-1)}"},
         {'name': 'Disinflation', 'start': breakpoints[1], 'end': n,
@@ -340,8 +340,8 @@ def main():
     # Format x-axis with years
     year_ticks = []
     year_labels = []
-    for year in range(1960, 2000, 5):
-        month_idx = (year - 1957) * 12
+    for year in range(1960, 2026, 10):
+        month_idx = (year - 1955) * 12
         if 0 <= month_idx < n:
             year_ticks.append(month_idx)
             year_labels.append(str(year))
@@ -364,16 +364,20 @@ def main():
     #
     print("Generating LaTeX table...")
 
+    full_period = f"{index_to_date(0)[:4]}--{index_to_date(n - 1)[:4]}"
+    end_date = START_DATE + relativedelta(months=n)
+    sample_dates = f"{START_DATE.strftime('%B %Y')} to {end_date.strftime('%B %Y')}"
     latex = generate_latex_table(n, M_FULL, alpha, full_results,
                                   subsample_results_alpha, subsample_results_bootstrap,
-                                  breakpoints)
+                                  breakpoints, regime_stats, full_period, sample_dates)
     with open(OUTPUT_TABLE, 'w') as f:
         f.write(latex)
     print(f"Table saved to: {OUTPUT_TABLE}")
 
 
 def generate_latex_table(n, m, alpha, full_results, subsample_results_alpha,
-                         subsample_results_bootstrap, breakpoints):
+                         subsample_results_bootstrap, breakpoints,
+                         regime_stats, full_period, sample_dates):
     """Generate LaTeX table for the paper with two panels."""
 
     latex = r"""\begin{table}[t!]
@@ -388,7 +392,7 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW & LWLFC \\
 """
 
     # Full sample row
-    latex += f"Full sample (1957--1997) & {n} & {m}"
+    latex += f"Full sample ({full_period}) & {n} & {m}"
     for method in ['LW', 'V', 'HC', 'ELW', '2ELW', 'LWLFC']:
         latex += f" & ${full_results[method]['d']:.3f}$"
     latex += r" \\" + "\n"
@@ -448,20 +452,23 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW & LWLFC \\
 \begin{tablenotes}
 \footnotesize
 \item Notes: Estimates of $d$ with standard errors in parentheses. French
-inflation is monthly diff-log CPI from January 1957 to December 1997.
+inflation is monthly diff-log CPI from """ + sample_dates + r""".
 Structural breaks detected following \cite{bai-perron-2003}: """
 
     # Add break dates
     break_dates = [index_to_date(bp) for bp in breakpoints]
     latex += ", ".join(break_dates)
 
-    latex += r""". Mean inflation: 5.0\%/yr (pre-1973), 10.3\%/yr (1973--1984), 2.5\%/yr (post-1984).
+    means = [f"{r['mean_ann']:.1f}\\%/yr" for r in regime_stats]
+    latex += (r""". Mean inflation: """
+              + f"{means[0]} (pre-1973), {means[1]} (1973--1984), {means[2]} (post-1984)"
+              + r""".
 Panel A uses the same power rule as the full sample.
 Panel B uses bootstrap MSE-optimal bandwidth selection \citep{arteche-orbe-2017}.
 \end{tablenotes}
 \end{threeparttable}
 \end{table}
-"""
+""")
 
     return latex
 

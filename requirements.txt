@@ -1,4 +1,4 @@
-pyelw==1.0.0
+pyelw==1.0.1
 numpy>=2.3.3
 pandas>=2.3.3
 scipy>=1.13.1

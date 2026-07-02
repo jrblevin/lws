@@ -72,6 +72,7 @@ def main():
         B=B,
         m_min=M_MIN,
         m_max=m_max,
+        n_jobs=-1,
         verbose=True
     )
     selector.fit(series)

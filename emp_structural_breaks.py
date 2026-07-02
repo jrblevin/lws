@@ -259,6 +259,41 @@ def main():
     subsample_results = subsample_results_alpha
 
     #
+    # Part 3.C. Bandwidth sensitivity for the pre-oil regime (LW)
+    #
+    # Supports the claim in the paper that the pre-oil-shocks LW
+    # estimate is stable from the baseline rule m = floor(n^0.65) up
+    # to the bootstrap-optimal bandwidth, with all 95% CIs excluding
+    # zero.
+    print("Part C: Bandwidth sensitivity for the pre-oil regime (LW)")
+    print("----------------------------------------------------------")
+    print()
+    pre_oil = inflation[regimes[0]['start']:regimes[0]['end']]
+    n_pre = len(pre_oil)
+    m_base = int(np.floor(n_pre ** 0.65))
+    m_top = subsample_results_bootstrap[0]['m']
+    print(f"n = {n_pre}, available Fourier frequencies = {n_pre // 2}")
+    print(f"Evaluating bandwidths from baseline m = floor(n^0.65) = {m_base} "
+          f"to bootstrap-optimal m = {m_top}")
+    print()
+    lw = LW(taper='none')
+    d_vals = []
+    ci_excludes_zero = []
+    print(f"{'m':>4} {'d_hat':>8} {'SE':>8}")
+    print("--------------------------")
+    for m_cur in range(m_base, m_top + 1):
+        r = lw.estimate(pre_oil, m=m_cur, bounds=BOUNDS, verbose=False)
+        d_vals.append(r['d_hat'])
+        ci_excludes_zero.append(r['d_hat'] - 1.96 * r['se'] > 0)
+        if m_cur == m_base or m_cur == m_top or m_cur % 10 == 0:
+            print(f"{m_cur:>4} {r['d_hat']:>8.3f} {r['se']:>8.3f}")
+    print()
+    print(f"LW d_hat range over m in [{m_base}, {m_top}]: "
+          f"[{min(d_vals):.3f}, {max(d_vals):.3f}]")
+    print(f"All 95% CIs exclude zero: {all(ci_excludes_zero)}")
+    print()
+
+    #
     # Part 4: Qu (2011) Test for Spurious Long Memory
     #
     print("Part 4: Qu (2011) Test for Spurious Long Memory")
@@ -269,7 +304,7 @@ def main():
     print()
 
     # Test full sample
-    m_qu = int(np.floor(1 + n**0.75))  # Standard bandwidth for Qu test
+    m_qu = int(np.floor(1 + n**0.70))  # Qu (2011, Remark 2) recommends m = n^0.70
     qu_full = qu_test(inflation, m=m_qu, epsilon=0.05)
     print(f"Full sample (n = {n}, m = {m_qu}):")
     print(f"  d_hat = {qu_full['d_hat']:.4f}")
@@ -286,7 +321,7 @@ def main():
     for regime in regime_stats:
         segment = inflation[regime['start']:regime['end']]
         n_sub = len(segment)
-        m_qu_sub = int(np.floor(1 + n_sub**0.75))
+        m_qu_sub = int(np.floor(1 + n_sub**0.70))
 
         qu_result = qu_test(segment, m=m_qu_sub, epsilon=0.05)
         qu_subsample_results.append({

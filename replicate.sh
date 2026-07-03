@@ -54,7 +54,7 @@ echo "[6/16] Running Table 6: mc_2elw.py (2ELW Estimator)"
 python3 mc_2elw.py 2>&1 | tee logs/mc_2elw.log
 echo ""
 
-echo "[7/16] Running Tables 7, 13, and 14 (Comprehensive Comparison; n = 500, 250, 1000)"
+echo "[7/16] Running Tables 7, 14, and 15 (Comprehensive Comparison; n = 500, 250, 1000)"
 python3 mc_comprehensive.py 2>&1 | tee logs/mc_comprehensive.log
 echo ""
 
@@ -90,11 +90,11 @@ echo ""
 
 # Appendix: Robustness Checks
 
-echo "[15/16] Running Table 15: mc_comprehensive_ma.py (MA(1) Short-Run Dynamics)"
+echo "[15/16] Running Table 16: mc_comprehensive_ma.py (MA(1) Short-Run Dynamics)"
 python3 mc_comprehensive_ma.py 2>&1 | tee logs/mc_comprehensive_ma.log
 echo ""
 
-echo "[16/16] Running Table 16: mc_comprehensive_arma.py (ARMA(1,1) Short-Run Dynamics)"
+echo "[16/16] Running Table 17: mc_comprehensive_arma.py (ARMA(1,1) Short-Run Dynamics)"
 python3 mc_comprehensive_arma.py 2>&1 | tee logs/mc_comprehensive_arma.log
 echo ""
 

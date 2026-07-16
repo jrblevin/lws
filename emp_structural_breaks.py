@@ -160,7 +160,7 @@ def main():
     for regime in regimes:
         segment = inflation[regime['start']:regime['end']]
         mean_ann = np.mean(segment) * 12 * 100  # Annualized percentage
-        std_ann = np.std(segment) * np.sqrt(12) * 100  # Annualized percentage
+        std_ann = np.std(segment) * 12 * 100  # S.D. of annualized monthly rates (%)
         regime['n'] = len(segment)
         regime['mean_ann'] = mean_ann
         regime['std_ann'] = std_ann

@@ -121,7 +121,7 @@ def main():
     print()
     print("Generating bandwidth selection figure...")
 
-    fig, ax = plt.subplots(figsize=(8, 5))
+    fig, ax = plt.subplots(figsize=(8, 4))
 
     # Plot d_hat vs m (using LW color from common scheme)
     ax.plot(m_range, d_hat_lw, color=ESTIMATOR_COLORS['LW'], linewidth=1.5,
@@ -190,7 +190,7 @@ def main():
     mse_bandwidths = np.array(sorted(mse_profile.keys()))
     mse_values = np.array([mse_profile[m] for m in mse_bandwidths])
 
-    fig2, ax2 = plt.subplots(figsize=(8, 5))
+    fig2, ax2 = plt.subplots(figsize=(8, 4))
 
     # Plot MSE vs m
     ax2.plot(mse_bandwidths, mse_values, color=ESTIMATOR_COLORS['LW'], linewidth=1.5,

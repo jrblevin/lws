@@ -25,7 +25,7 @@ SERIES = {
 
 def plot_objective_functions():
     # Set up the figure with single plot
-    fig, ax = plt.subplots(1, 1, figsize=(10, 6))
+    fig, ax = plt.subplots(1, 1, figsize=(10, 5))
 
     # Common settings
     bounds = (-1.0, 3.0)

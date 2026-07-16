@@ -5,6 +5,7 @@ This directory contains replication code for the following paper:
 Blevins, J.R. (2026).
 [Semiparametric Estimation of Fractional Integration: An Evaluation of Local Whittle Methods](https://jblevins.org/research/lws).
 Working Paper, The Ohio State University.
+<https://arxiv.org/abs/2511.15689>
 
 ## Requirements
 
@@ -37,6 +38,7 @@ paper:
 - `mc_distributions.py` - Sampling distributions figure
 - `mc_comprehensive_ma.py` - Monte Carlo with MA(1) short-run dynamics (Appendix)
 - `mc_comprehensive_arma.py` - Monte Carlo with ARMA(1,1) short-run dynamics (Appendix)
+- `mc_comprehensive_heavy.py` - Monte Carlo with t(5) and GARCH(1,1) short-run dynamics (Appendix)
 
 **Empirical Analyses:**
 - `emp_hurvich_chen.py` - Hurvich and Chen (2000) datasets

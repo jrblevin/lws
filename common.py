@@ -136,3 +136,60 @@ def arfima_arma(n, d, phi=0.0, theta=0.0, sigma=1.0, seed=None, burnin=0):
 
     # Step 4: Discard burn-in.
     return x[burnin:]
+
+
+def write_replication_table(filename, caption, label, panels, notes):
+    """
+    Write a combined Original-vs-Replication LaTeX table.
+
+    Parameters
+    ----------
+    filename : str
+        Output path for the .tex file.
+    caption : str
+        Table caption.
+    label : str
+        LaTeX cross-reference label.
+    panels : list of (str, list of tuple)
+        (title, rows) pairs, one per panel, where each row is a
+        (d, orig_bias, orig_sd, orig_mse, rep_bias, rep_sd, rep_mse)
+        tuple.
+    notes : str
+        Table notes (LaTeX source).
+    """
+    latex_table = f"""\\begin{{table}}[!tp]
+\\centering
+\\singlespacing
+\\begin{{threeparttable}}
+\\caption{{{caption}}}
+\\label{{{label}}}
+\\footnotesize
+\\begin{{tabular}}{{r@{{\\hspace{{1.5em}}}}rrr@{{\\hspace{{1.5em}}}}rrr}}
+\\toprule
+\\multicolumn{{1}}{{c}}{{}} & \\multicolumn{{3}}{{c}}{{Original}} & \\multicolumn{{3}}{{c}}{{Replication}} \\\\
+\\cmidrule(lr){{2-4}} \\cmidrule(lr){{5-7}}
+$d$ & Bias & S.D. & MSE & Bias & S.D. & MSE \\\\
+"""
+
+    for title, rows in panels:
+        latex_table += f"""\\midrule
+\\multicolumn{{7}}{{c}}{{\\textit{{{title}}}}} \\\\
+\\midrule
+"""
+        for d, *stats in rows:
+            cells = ' & '.join(f'${float(v):7.4f}$' for v in stats)
+            latex_table += f"${d:4.1f}$ & {cells} \\\\\n"
+
+    latex_table += f"""\\bottomrule
+\\end{{tabular}}
+\\begin{{tablenotes}}
+\\footnotesize
+\\item Notes: {notes}
+\\end{{tablenotes}}
+\\end{{threeparttable}}
+\\end{{table}}
+"""
+
+    with open(filename, 'w') as f:
+        f.write(latex_table)
+    print(f"LaTeX table saved to: {filename}")

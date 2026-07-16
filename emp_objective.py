@@ -99,8 +99,12 @@ def plot_series_objectives(series, m, d_grid, ax, title, bounds):
                 # ELW with demeaned data
                 series_demean = series - np.mean(series)
                 obj_val = estimator.objective(d, series_demean, m)
+            elif est_name == '2ELW':
+                # TwoStepELW.objective() expects the demeaned/detrended series
+                resid = estimator.detrend(series, estimator.trend_order)
+                obj_val = estimator.objective(d, resid, m)
             else:
-                # ELW and 2ELW use different signature
+                # ELW uses the raw series (assumes a known, zero mean)
                 obj_val = estimator.objective(d, series, m)
             obj_values.append(obj_val)
 

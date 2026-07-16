@@ -28,6 +28,51 @@ echo ""
 echo "Started at: $(date)"
 echo ""
 
+# Record the system and software environment.  LWLFC uses SciPy's L-BFGS-B,
+# whose converged optima can shift slightly across SciPy versions, so the
+# exact environment is logged with every replication run.
+{
+echo "System Information"
+echo "------------------"
+echo "Host:        $(uname -n)"
+echo "Kernel:      $(uname -s) $(uname -r) ($(uname -m))"
+case "$(uname -s)" in
+    Darwin)
+        echo "OS:          $(sw_vers -productName) $(sw_vers -productVersion) (build $(sw_vers -buildVersion))"
+        echo "CPU:         $(sysctl -n machdep.cpu.brand_string 2>/dev/null || echo unknown)"
+        echo "Cores:       $(sysctl -n hw.physicalcpu) physical / $(sysctl -n hw.logicalcpu) logical"
+        echo "Memory:      $(( $(sysctl -n hw.memsize) / 1073741824 )) GB"
+        ;;
+    Linux)
+        if [ -r /etc/os-release ]; then
+            echo "OS:          $(. /etc/os-release && echo "$PRETTY_NAME")"
+        fi
+        echo "CPU:         $(awk -F': ' '/model name/ {print $2; exit}' /proc/cpuinfo 2>/dev/null || echo unknown)"
+        echo "Cores:       $(nproc 2>/dev/null || echo unknown) logical"
+        echo "Memory:      $(awk '/MemTotal/ {printf "%.0f", $2/1048576}' /proc/meminfo 2>/dev/null || echo unknown) GB"
+        ;;
+esac
+echo ""
+echo "Software Versions"
+echo "-----------------"
+python3 - <<'PYEOF'
+import platform
+from importlib.metadata import version, PackageNotFoundError
+
+print(f"{'Python:':<13}{platform.python_version()} ({platform.python_implementation()})")
+for pkg in ("pyelw", "numpy", "scipy", "pandas", "matplotlib"):
+    try:
+        ver = version(pkg)
+    except PackageNotFoundError:
+        try:
+            ver = __import__(pkg).__version__
+        except Exception:
+            ver = "(not installed)"
+    print(f"{pkg + ':':<13}{ver}")
+PYEOF
+} 2>&1 | tee logs/system_info.log
+echo ""
+
 # Monte Carlo Tables and Figures
 
 echo "[1/16] Running Table 1: mc_lw.py (LW Estimator)"

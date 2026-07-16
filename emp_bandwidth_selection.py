@@ -58,7 +58,7 @@ def main():
     for i, m in enumerate(m_range):
         result = lw.estimate(series, m=m, verbose=False)
         d_hat_lw[i] = result['d_hat']
-        se_lw[i] = result['se']
+        se_lw[i] = result['ase']
         if (i + 1) % 100 == 0:
             print(f"  Completed {i + 1}/{len(m_range)} bandwidths")
 
@@ -79,7 +79,7 @@ def main():
 
     m_star = selector.optimal_m_
     d_star = selector.d_hat_
-    se_star = selector.se_
+    se_star = selector.ase_
     k_n = selector.k_n_
     iterations = selector.iterations_
     converged = selector.converged_
@@ -107,13 +107,13 @@ def main():
             'alpha': alpha,
             'm': m_power,
             'd_hat': result['d_hat'],
-            'se': result['se'],
-            'ci_lower': result['d_hat'] - 1.96 * result['se'],
-            'ci_upper': result['d_hat'] + 1.96 * result['se'],
+            'se': result['ase'],
+            'ci_lower': result['d_hat'] - 1.96 * result['ase'],
+            'ci_upper': result['d_hat'] + 1.96 * result['ase'],
         })
         # Note: alpha = 0.8 matches Hurvich and Chen (2000)
         hc_note = " (HC 2000)" if alpha == 0.8 else ""
-        print(f"m = n^{alpha:.2f} = {m_power:4d}:  d = {result['d_hat']:.4f} (SE = {result['se']:.4f}){hc_note}")
+        print(f"m = n^{alpha:.2f} = {m_power:4d}:  d = {result['d_hat']:.4f} (SE = {result['ase']:.4f}){hc_note}")
 
     #
     # Bandwidth selection figure
@@ -257,9 +257,9 @@ Method & Rule & $m$ & $\hat{d}_{\text{LW}}$ & SE & 95\% CI \\
 \end{tabular}
 \begin{tablenotes}
 \footnotesize
-\item Notes: Logarithm of S\&P 500 daily stock index value, $n = """ + str(n) + r"""$. \cite{hurvich-chen-2000}
-used $m=n^{0.80}$. Bootstrap MSE bandwidth
-selected by minimizing bootstrap MSE with $B = """ + str(B) + r"""$ replications and resampling
+\item Notes: Logarithm of S\&P 500 daily stock index value, $n =""" + str(n) + r"""$. \cite{hurvich-chen-2000}
+used $m=n^{0.80}$. Asymptotic standard errors reported with 95\% confidence intervals.
+Bootstrap MSE bandwidth selected by minimizing bootstrap MSE with $B = """ + str(B) + r"""$ replications and resampling
 width $k_n = """ + str(k_n) + r"""$ following \cite{arteche-orbe-2017}.
 \end{tablenotes}
 \end{threeparttable}

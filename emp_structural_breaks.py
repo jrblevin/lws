@@ -49,32 +49,32 @@ def estimate_all_methods(series, m):
     # LW estimator (no taper)
     lw = LW(taper='none')
     lw_result = lw.estimate(series, m=m, bounds=BOUNDS, verbose=False)
-    results['LW'] = {'d': lw_result['d_hat'], 'se': lw_result['se']}
+    results['LW'] = {'d': lw_result['d_hat'], 'se': lw_result['ase']}
 
     # Velasco (Kolmogorov taper)
     lw_v = LW(taper='kolmogorov')
     v_result = lw_v.estimate(series, m=m, bounds=BOUNDS, verbose=False)
-    results['V'] = {'d': v_result['d_hat'], 'se': v_result['se']}
+    results['V'] = {'d': v_result['d_hat'], 'se': v_result['ase']}
 
     # Hurvich-Chen taper
     lw_hc = LW(taper='hc')
     hc_result = lw_hc.estimate(series, m=m, bounds=BOUNDS, verbose=False)
-    results['HC'] = {'d': hc_result['d_hat'], 'se': hc_result['se']}
+    results['HC'] = {'d': hc_result['d_hat'], 'se': hc_result['ase']}
 
     # Exact Local Whittle
     elw = ELW()
     elw_result = elw.estimate(series, m=m, bounds=BOUNDS, verbose=False)
-    results['ELW'] = {'d': elw_result['d_hat'], 'se': elw_result['se']}
+    results['ELW'] = {'d': elw_result['d_hat'], 'se': elw_result['ase']}
 
     # Two-step Exact Local Whittle
     elw2 = TwoStepELW()
     elw2_result = elw2.estimate(series, m=m, bounds=BOUNDS, trend_order=0, verbose=False)
-    results['2ELW'] = {'d': elw2_result['d_hat'], 'se': elw2_result['se']}
+    results['2ELW'] = {'d': elw2_result['d_hat'], 'se': elw2_result['ase']}
 
     # LWLFC (Hou-Perron)
     lwlfc = LWLFC()
     lwlfc.fit(series, m=m)
-    results['LWLFC'] = {'d': lwlfc.d_hat_, 'se': lwlfc.se_}
+    results['LWLFC'] = {'d': lwlfc.d_hat_, 'se': lwlfc.ase_}
 
     return results
 
@@ -486,7 +486,7 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW & LWLFC \\
 \end{tabular}
 \begin{tablenotes}
 \footnotesize
-\item Notes: Estimates of $d$ with standard errors in parentheses. French
+\item Notes: Estimates of $d$ with asymptotic standard errors in parentheses. French
 inflation is monthly diff-log CPI from """ + sample_dates + r""".
 Structural breaks detected following \cite{bai-perron-2003}: """
 

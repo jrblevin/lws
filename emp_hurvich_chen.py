@@ -53,12 +53,13 @@ for desc, filename, transform, m, paper_d_hat, paper_se in specifications:
     elif transform == 'diff-log':
         series = np.diff(np.log(series))
 
-    # Estimate with all methods
-    # LW estimator (no taper)
+    # Estimate with all methods.  We report the asymptotic standard error
+    # ('ase') for every estimator except HC, which uses the Hurvich-Chen
+    # (2000) variance approximation ('se') to match their Table III.
     lw = LW(taper='none')
     lw_result = lw.estimate(series, m=m, bounds=bounds, verbose=False)
     lw_d_hat = lw_result['d_hat']
-    lw_se = lw_result['se']
+    lw_se = lw_result['ase']
 
     # Note: Hurvich and Chen (2000) report LW estimates with first-differenced data,
     # then add 1 back to the estimate.  To replicate those results, use the following
@@ -72,25 +73,25 @@ for desc, filename, transform, m, paper_d_hat, paper_se in specifications:
     lw_v = LW(taper='kolmogorov')
     v_result = lw_v.estimate(series, m=m, bounds=bounds, verbose=False)
     v_d_hat = v_result['d_hat']
-    v_se = v_result['se']
+    v_se = v_result['ase']
 
     # Hurvich-Chen taper
     lw_hc = LW(taper='hc')
     hc_result = lw_hc.estimate(series, m=m, bounds=bounds, verbose=False)
     hc_d_hat = hc_result['d_hat']
-    hc_se = hc_result['se']
+    hc_se = hc_result['se']  # HC (2000) variance approximation
 
     # Exact Local Whittle
     elw = ELW()
     elw_result = elw.estimate(series, m=m, bounds=bounds, verbose=False)
     elw_d_hat = elw_result['d_hat']
-    elw_se = elw_result['se']
+    elw_se = elw_result['ase']
 
     # Two-step Exact Local Whittle
     elw2 = TwoStepELW()
     elw2_result = elw2.estimate(series, m=m, bounds=bounds, trend_order=0, verbose=False)
     elw2_d_hat = elw2_result['d_hat']
-    elw2_se = elw2_result['se']
+    elw2_se = elw2_result['ase']
 
     # Store for LaTeX generation
     latex_results.append({
@@ -140,7 +141,7 @@ latex_table += """\\bottomrule
 \\end{tabular}
 \\begin{tablenotes}
 \\footnotesize
-\\item Notes: Estimates of $d$ with standard errors in parentheses. Original column shows results from Hurvich and Chen (2000) Table III for HC. Replication columns report results from multiple estimators: LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW.
+\\item Notes: Estimates of $d$ with asymptotic standard errors in parentheses. The Original column shows results from Hurvich and Chen (2000) Table III for HC. Replication columns report results from multiple estimators: LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW. The replication HC column reports standard errors based on their variance approximation (rather than asymptotic standard errors) for direct comparison with the original.
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{table}

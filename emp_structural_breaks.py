@@ -284,9 +284,9 @@ def main():
     for m_cur in range(m_base, m_top + 1):
         r = lw.estimate(pre_oil, m=m_cur, bounds=BOUNDS, verbose=False)
         d_vals.append(r['d_hat'])
-        ci_excludes_zero.append(r['d_hat'] - 1.96 * r['se'] > 0)
+        ci_excludes_zero.append(r['d_hat'] - 1.96 * r['ase'] > 0)
         if m_cur == m_base or m_cur == m_top or m_cur % 10 == 0:
-            print(f"{m_cur:>4} {r['d_hat']:>8.3f} {r['se']:>8.3f}")
+            print(f"{m_cur:>4} {r['d_hat']:>8.3f} {r['ase']:>8.3f}")
     print()
     print(f"LW d_hat range over m in [{m_base}, {m_top}]: "
           f"[{min(d_vals):.3f}, {max(d_vals):.3f}]")

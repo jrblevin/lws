@@ -181,7 +181,7 @@ write_replication_table(
     label='tab:mc:replications:lw',
     panels=[
         ('Panel A: Local Whittle (LW)', lw_rows),
-        ('Panel B: Velasco tapered LW, Bartlett taper (V)', v_rows),
+        ('Panel B: Velasco tapered LW, Bartlett taper', v_rows),
         ('Panel C: Hurvich--Chen tapered LW (HC)', hc_rows),
     ],
     notes=(

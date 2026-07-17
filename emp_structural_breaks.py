@@ -490,8 +490,9 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW & LWLFC \\
 inflation is monthly log-differenced CPI from """ + sample_dates + r""".
 Structural breaks detected following \cite{bai-perron-2003}: """
 
-    # Add break dates
-    break_dates = [index_to_date(bp) for bp in breakpoints]
+    # Add break dates (Month Year format, matching the text and figure caption)
+    break_dates = [(START_DATE + relativedelta(months=bp)).strftime("%B %Y")
+                   for bp in breakpoints]
     latex += ", ".join(break_dates)
 
     means = [f"{r['mean_ann']:.1f}\\%/yr" for r in regime_stats]

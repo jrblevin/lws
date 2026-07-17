@@ -125,7 +125,7 @@ def main():
 
     # Plot d_hat vs m (using LW color from common scheme)
     ax.plot(m_range, d_hat_lw, color=ESTIMATOR_COLORS['LW'], linewidth=1.5,
-            alpha=0.8, label=r'$\hat{d}_{\text{LW}}(m)$')
+            alpha=0.8, label=r'$\hat{d}_{\mathrm{LW}}(m)$')
 
     # Add confidence band (approximate 95% CI)
     upper = d_hat_lw + 1.96 * se_lw
@@ -157,7 +157,7 @@ def main():
 
     # Labels and formatting
     ax.set_xlabel('Bandwidth $m$', fontsize=11)
-    ax.set_ylabel(r'$\hat{d}_{\text{LW}}$', fontsize=11)
+    ax.set_ylabel(r'$\hat{d}_{\mathrm{LW}}$', fontsize=11)
     # ax.set_title('S&P 500: Local Whittle Estimates by Bandwidth', fontsize=12)
 
     # Set axis limits
@@ -237,7 +237,7 @@ def generate_latex_table(m_star, d_star, se_star, power_rule_results, n, k_n):
 \label{tab:emp_bandwidth_selection}
 \begin{tabular}{llrrrr}
 \toprule
-Method & Rule & $m$ & $\hat{d}_{\text{LW}}$ & SE & 95\% CI \\
+Method & Rule & $m$ & $\hat{d}_{\mathrm{LW}}$ & SE & 95\% CI \\
 \midrule
 """
     # Power rules n^\alpha. Hurvich and Chen (2000) used alpha = 0.8.

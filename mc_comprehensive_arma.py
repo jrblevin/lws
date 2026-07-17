@@ -224,6 +224,8 @@ $d$ & $\\phi$ & $\\theta$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW
 
         latex_table += "\\midrule\n"
 
+    # Drop the trailing group separator so \bottomrule is not doubled
+    latex_table = latex_table.removesuffix("\\midrule\n")
     latex_table += f"""\\bottomrule
 \\end{{tabular}}
 \\begin{{tablenotes}}

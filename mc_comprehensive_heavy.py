@@ -234,7 +234,7 @@ def main():
     print()
 
     # Generate LaTeX table
-    latex_table = """\\begin{table}[htbp]
+    latex_table = """\\begin{table}[tp]
 \\centering
 \\begin{threeparttable}
 \\caption{Estimator Comparison under Heavy-Tailed and GARCH Innovations}
@@ -249,6 +249,9 @@ $d$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LWLFC \\\\
 """
 
     for dist in dist_list:
+        # Omit Gaussian baseline from LaTeX table
+        if dist == 'gaussian':
+            continue
         latex_table += (f"\\multicolumn{{13}}{{l}}{{\\textit{{{dist_labels[dist]}}}}} \\\\\n")
         for d_val in d_list:
             bias_row = bias_pivot.loc[(d_val, dist)]
@@ -279,15 +282,13 @@ $d$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LWLFC \\\\
 \\footnotesize
 \\item Notes: Monte Carlo results for $\\ARFIMA(0,d,0)$ processes with $n={n_obs}$, $m={m}$, {mc_reps:,} replications,
     and mean-zero, unit-variance innovations $\\varepsilon_t$.
-\\item Gaussian: $\\varepsilon_t \\iidsim \\Normal(0,1)$. This panel matches the
-    $\\rho = 0$ panel of the AR(1) comparison.
-\\item Student-$t(5)$: $\\varepsilon_t = \\eta_t / \\sqrt{{\\nf{{5}}{{3}}}}$ with
+    Student-$t(5)$: $\\varepsilon_t = \\eta_t / \\sqrt{{\\nf{{5}}{{3}}}}$ with
     $\\eta_t \\iidsim t(5)$ (kurtosis 9).
-\\item GARCH(1,1): $\\varepsilon_t = \\sigma_t \\eta_t$ with $\\eta_t \\iidsim \\Normal(0,1)$ and
+    GARCH(1,1): $\\varepsilon_t = \\sigma_t \\eta_t$ with $\\eta_t \\iidsim \\Normal(0,1)$ and
     $\\sigma_t^2 = \\omega + \\alpha \\varepsilon_{{t-1}}^2 + \\beta \\sigma_{{t-1}}^2$,
     $(\\omega, \\alpha, \\beta) = ({garch_omega}, {garch_alpha}, {garch_beta})$,
     implying unit unconditional variance and kurtosis $\\approx 3.35$.
-\\item Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$.
+    Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$.
 \\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW, LWLFC = Local Whittle with Low Frequency Contamination.
 \\end{{tablenotes}}
 \\end{{threeparttable}}

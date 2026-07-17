@@ -186,7 +186,7 @@ def main():
     print()
 
     # Generate LaTeX table
-    latex_table = """\\begin{table}[htbp]
+    latex_table = """\\begin{table}[tp]
 \\centering
 \\begin{threeparttable}
 \\caption{Estimator Comparison under ARMA(1,1) Short-Run Dynamics}

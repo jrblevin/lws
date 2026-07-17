@@ -220,7 +220,7 @@ def main():
     print()
 
     # Generate LaTeX table
-    latex_table = """\\begin{table}[htbp]
+    latex_table = """\\begin{table}[tp]
 \\centering
 \\begin{threeparttable}
 \\caption{Estimator Comparison under MA(1) Short-Run Dynamics}
@@ -235,6 +235,9 @@ $d$ & $\\theta$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & 
 """
 
     for theta_val in theta_list:
+        # Omit Gaussian baseline from LaTeX table
+        if theta_val == 0.0:
+            continue
         for d_val in d_list:
             bias_row = bias_pivot.loc[(d_val, theta_val)]
             mse_row = mse_pivot.loc[(d_val, theta_val)]

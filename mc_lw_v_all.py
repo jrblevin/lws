@@ -69,7 +69,7 @@ for d_true in d_list:
 print("=====================================================================================")
 
 # Generate LaTeX table
-latex_table = f"""\\begin{{table}}[htbp]
+latex_table = f"""\\begin{{table}}[tp]
 \\centering
 \\begin{{threeparttable}}
 \\caption{{Comparison of Velasco (1999) Tapers}}

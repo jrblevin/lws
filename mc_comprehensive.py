@@ -269,7 +269,7 @@ $d$ & $\\rho$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LW
 \\footnotesize
 \\item Notes: Monte Carlo results for $\\ARFIMA(1,d,0)$ processes with $n={n_obs}$, $m={m}$, {mc_reps:,} replications.
     Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$.
-\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW, LWLFC = Local Whittle with Low Frequency Contamination.
+\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich--Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW, LWLFC = Local Whittle with Low Frequency Contamination.
 \\end{{tablenotes}}
 \\end{{threeparttable}}
 \\end{{table}}

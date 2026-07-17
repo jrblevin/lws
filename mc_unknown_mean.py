@@ -311,7 +311,7 @@ $d$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LWLFC \\\\
 \\footnotesize
 \\item Notes: MSE results for $\\ARFIMA(0,d,0)$ with $n={n_obs}$, $m={m}$, {mc_reps:,} replications.
     Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$ or $\\text{{MSE Ratio}} > {MSE_RATIO_THRESHOLD:.1f}$.
-\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW with adaptive mean estimation applied to original series, LWLFC = Local Whittle with Low Frequency Contamination.
+\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich--Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW with adaptive mean estimation applied to original series, LWLFC = Local Whittle with Low Frequency Contamination.
 \\end{{tablenotes}}
 \\end{{threeparttable}}
 \\end{{table}}

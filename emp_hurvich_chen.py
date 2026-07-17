@@ -141,7 +141,7 @@ latex_table += """\\bottomrule
 \\end{tabular}
 \\begin{tablenotes}
 \\footnotesize
-\\item Notes: Estimates of $d$ with asymptotic standard errors in parentheses. The Original column shows results from Hurvich and Chen (2000) Table III for HC. Replication columns report results from multiple estimators: LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW. The replication HC column reports standard errors based on their variance approximation (rather than asymptotic standard errors) for direct comparison with the original.
+\\item Notes: Estimates of $d$ with asymptotic standard errors in parentheses. The Original column shows results from Hurvich and Chen (2000) Table III for HC. Replication columns report results from multiple estimators: LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich--Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW. The replication HC column reports standard errors based on their variance approximation (rather than asymptotic standard errors) for direct comparison with the original.
 \\end{tablenotes}
 \\end{threeparttable}
 \\end{table}

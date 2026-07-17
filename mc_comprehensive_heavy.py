@@ -291,7 +291,7 @@ $d$ & LW & V & HC & ELW & 2ELW & LWLFC & LW & V & HC & ELW & 2ELW & LWLFC \\\\
     $(\\omega, \\alpha, \\beta) = ({garch_omega}, {garch_alpha}, {garch_beta})$,
     implying unit unconditional variance and kurtosis $\\approx 3.35$.
     Shaded cells indicate $\\text{{MSE}} > {MSE_THRESHOLD:.2f}$.
-\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich-Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW, LWLFC = Local Whittle with Low Frequency Contamination.
+\\item LW = Local Whittle, V = Velasco (Kolmogorov), HC = Hurvich--Chen, ELW = Exact Local Whittle, 2ELW = Two-step ELW, LWLFC = Local Whittle with Low Frequency Contamination.
 \\end{{tablenotes}}
 \\end{{threeparttable}}
 \\end{{table}}

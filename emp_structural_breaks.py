@@ -487,7 +487,7 @@ Period & $n$ & $m$ & LW & V & HC & ELW & 2ELW & LWLFC \\
 \begin{tablenotes}
 \footnotesize
 \item Notes: Estimates of $d$ with asymptotic standard errors in parentheses. French
-inflation is monthly diff-log CPI from """ + sample_dates + r""".
+inflation is monthly log-differenced CPI from """ + sample_dates + r""".
 Structural breaks detected following \cite{bai-perron-2003}: """
 
     # Add break dates

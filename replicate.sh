@@ -135,6 +135,12 @@ echo "[14/14] Running Table 14: mc_comprehensive_heavy.py (Heavy-Tailed and GARC
 python3 mc_comprehensive_heavy.py 2>&1 | tee logs/mc_comprehensive_heavy.log
 echo ""
 
+# Optional: carry out the Qu (2011) using Qu's official R code (qu-2011/).
+# This requires Rscript and the R 'fracdiff' package.
+#echo "[extra] Verifying Qu (2011) test using official R code"
+#Rscript qu_test_validation.R 2>&1 | tee logs/qu_test_validation.log
+#echo ""
+
 echo "Replication Complete!"
 echo ""
 echo "Monte Carlo Tables (tables/):"

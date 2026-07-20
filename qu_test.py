@@ -1,7 +1,11 @@
 #!/usr/bin/env python3
 """Qu (2011) test for true long memory against spurious long memory.
 
-This implementation follows the original R code provided by Zhongjun Qu.
+Although this implementation follows the original R code provided by
+Zhongjun Qu for computing the W statistic, it should not be considered
+a full implementation. It does not include the optional ARFIMA-AIC
+pre-whitening ("whitten-aic.R") finite-sample size correction that
+accompanies the original reference code.
 
 References
 ----------
@@ -42,10 +46,12 @@ def qu_test(data, m=None, epsilon=0.05):
 
     Notes
     -----
-    The null hypothesis is true long memory (fractional integration).
-    The alternative is spurious long memory (e.g., due to structural breaks).
-    This implementation follows Qu's original R code (RV5.R).
-    Critical values are from Qu (2011) Table 1.
+    The null hypothesis is that the series is a stationary long memory
+    process. The alternative is that the series is affected by regime
+    change or a smoothly varying trend.  This implementation follows
+    Qu's original R code (RV5.R) for implementing the test statistic
+    only. It does not apply Qu's optional ARFIMA-AIC pre-whitening
+    finite-sample correction. Critical values are from Qu (2011) Table 1.
     """
     data = np.asarray(data, dtype=float)
     n = len(data)
